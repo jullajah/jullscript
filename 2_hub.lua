@@ -1,14 +1,16 @@
--- HUB MINI TERPISAH BY JULL
--- Panel draggable + tombol panggil script lain
+-- HubGUI Final By Jull
 
-local gui = Instance.new("ScreenGui")
-gui.Parent = game.CoreGui
+local CoreGui = game:GetService("CoreGui")
 
 -- PANEL UTAMA
+local gui = Instance.new("ScreenGui")
+gui.Parent = CoreGui
+gui.Name = "HubGUI"
+
 local panel = Instance.new("Frame")
-panel.Size = UDim2.new(0,180,0,30)
-panel.Position = UDim2.new(0,10,0,10)
-panel.BackgroundColor3 = Color3.fromRGB(20,20,20)
+panel.Size = UDim2.new(0,220,0,180)
+panel.Position = UDim2.new(0.05,0,0.3,0)
+panel.BackgroundColor3 = Color3.fromRGB(30,30,30)
 panel.BackgroundTransparency = 0.3
 panel.Active = true
 panel.Draggable = true
@@ -16,7 +18,8 @@ panel.Parent = gui
 
 -- TITLE
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1,0,1,0)
+title.Size = UDim2.new(1,0,0,30)
+title.Position = UDim2.new(0,0,0,0)
 title.BackgroundTransparency = 1
 title.Text = "Hub Tech Menu"
 title.TextColor3 = Color3.fromRGB(255,255,255)
@@ -25,29 +28,39 @@ title.Font = Enum.Font.SourceSansBold
 title.Parent = panel
 
 -- FUNGSI TAMBAH TOMBOL
-local function addTechButton(name, yPos, callback)
+local function addTechButton(name, yPos, url)
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0,160,0,24)
+    btn.Size = UDim2.new(0,200,0,30)
     btn.Position = UDim2.new(0,10,0,yPos)
     btn.Text = name
-    btn.BackgroundColor3 = Color3.fromRGB(40,40,40)
+    btn.BackgroundColor3 = Color3.fromRGB(50,50,50)
     btn.TextColor3 = Color3.fromRGB(255,255,255)
     btn.TextScaled = true
     btn.Font = Enum.Font.SourceSans
-    btn.Parent = gui
+    btn.Parent = panel -- tombol jadi anak panel
 
-    btn.MouseButton1Click:Connect(callback)
+    btn.MouseButton1Click:Connect(function()
+        loadstring(game:HttpGet(url))()
+    end)
 end
 
--- CONTOH TOMBOL (Ganti link dengan script kamu sendiri)
-addTechButton("Tech 1", 50, function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/jullajah/jullscript/main/optimizer.lua"))()
-end)
+-- ===== ISI TOMBOL TECH =====
+addTechButton("Supa Tech", 40, "https://raw.githubusercontent.com/jullajah/jullsc/main/supa.lua")
+addTechButton("Float Tech", 80, "https://raw.githubusercontent.com/jullajah/jullsc/main/floattech.lua")
+addTechButton("Other Tech", 120, "https://raw.githubusercontent.com/jullajah/jullsc/main/other.lua")
+-- =======================
 
-addTechButton("Tech 2", 80, function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/jullajah/jullhub/main/floattech.lua"))()
-end)
+-- TOMBOL CLOSE
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0,30,0,30)
+closeBtn.Position = UDim2.new(1,-35,0,5)
+closeBtn.Text = "X"
+closeBtn.BackgroundColor3 = Color3.fromRGB(200,50,50)
+closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+closeBtn.Font = Enum.Font.SourceSansBold
+closeBtn.TextScaled = true
+closeBtn.Parent = panel
 
-addTechButton("Tech 3", 110, function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/jullajah/jullhub/main/supatech.lua"))()
+closeBtn.MouseButton1Click:Connect(function()
+    gui:Destroy()
 end)
