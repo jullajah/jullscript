@@ -8,7 +8,7 @@ gui.Parent = CoreGui
 gui.Name = "HubGUI"
 
 local panel = Instance.new("Frame")
-panel.Size = UDim2.new(0,220,0,180)
+panel.Size = UDim2.new(0,220,0,220)
 panel.Position = UDim2.new(0.05,0,0.3,0)
 panel.BackgroundColor3 = Color3.fromRGB(30,30,30)
 panel.BackgroundTransparency = 0.3
@@ -40,15 +40,24 @@ local function addTechButton(name, yPos, url)
     btn.Parent = panel -- tombol jadi anak panel
 
     btn.MouseButton1Click:Connect(function()
-        loadstring(game:HttpGet(url))()
+        -- Jika URL valid akan load script
+        -- Untuk sekarang pakai dummy print agar bisa test tombol
+        if url then
+            local success, err = pcall(function()
+                loadstring(game:HttpGet(url))()
+            end)
+            if not success then
+                warn("Gagal load tech:", err)
+            end
+        end
     end)
 end
 
--- ===== ISI TOMBOL TECH =====
+-- ===== ISI TOMBOL TECH (Bisa diganti link RAW asli nanti) =====
 addTechButton("Supa Tech", 40, "https://raw.githubusercontent.com/jullajah/jullsc/main/supa.lua")
 addTechButton("Float Tech", 80, "https://raw.githubusercontent.com/jullajah/jullsc/main/floattech.lua")
 addTechButton("Other Tech", 120, "https://raw.githubusercontent.com/jullajah/jullsc/main/other.lua")
--- =======================
+-- ===== SELESAI =====
 
 -- TOMBOL CLOSE
 local closeBtn = Instance.new("TextButton")
