@@ -38,57 +38,61 @@ for _,v in ipairs(workspace:GetDescendants()) do
 end
 workspace.DescendantAdded:Connect(optimize)
 
--- UI
-local gui = Instance.new("ScreenGui", game.CoreGui)
-local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0,200,0,110)
-frame.Position = UDim2.new(0.05,0,0.3,0)
-frame.BackgroundColor3 = Color3.fromRGB(25,25,25)
-frame.Active = true
-frame.Draggable = true
+-- MINI UI FPS & PING
 
-local title = Instance.new("TextLabel", frame)
-title.Size = UDim2.new(1,0,0,25)
-title.Text = "Optimizer Jull"
-title.BackgroundColor3 = Color3.fromRGB(40,40,40)
-title.TextColor3 = Color3.new(1,1,1)
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Stats = game:GetService("Stats")
 
-local fpsLabel = Instance.new("TextLabel", frame)
-fpsLabel.Position = UDim2.new(0,0,0,30)
-fpsLabel.Size = UDim2.new(1,0,0,25)
-fpsLabel.TextColor3 = Color3.new(0,1,0)
+local gui = Instance.new("ScreenGui")
+gui.Parent = game.CoreGui
+
+local fpsLabel = Instance.new("TextLabel")
+fpsLabel.Parent = gui
+fpsLabel.Size = UDim2.new(0,90,0,20)
+fpsLabel.Position = UDim2.new(0,10,0,10)
 fpsLabel.BackgroundTransparency = 1
+fpsLabel.Text = "FPS: 0"
+fpsLabel.TextColor3 = Color3.fromRGB(0,255,0)
+fpsLabel.TextScaled = true
+fpsLabel.Font = Enum.Font.SourceSansBold
 
-local pingLabel = Instance.new("TextLabel", frame)
-pingLabel.Position = UDim2.new(0,0,0,55)
-pingLabel.Size = UDim2.new(1,0,0,25)
-pingLabel.TextColor3 = Color3.new(0,1,1)
+local pingLabel = Instance.new("TextLabel")
+pingLabel.Parent = gui
+pingLabel.Size = UDim2.new(0,110,0,20)
+pingLabel.Position = UDim2.new(0,10,0,30)
 pingLabel.BackgroundTransparency = 1
+pingLabel.Text = "Ping: 0 ms"
+pingLabel.TextColor3 = Color3.fromRGB(0,200,255)
+pingLabel.TextScaled = true
+pingLabel.Font = Enum.Font.SourceSansBold
 
-local toggle = Instance.new("TextButton", frame)
-toggle.Position = UDim2.new(0,20,0,80)
-toggle.Size = UDim2.new(0,160,0,25)
-toggle.Text = "Hide Panel"
-toggle.BackgroundColor3 = Color3.fromRGB(60,60,60)
-toggle.TextColor3 = Color3.new(1,1,1)
+local toggle = Instance.new("TextButton")
+toggle.Parent = gui
+toggle.Size = UDim2.new(0,70,0,22)
+toggle.Position = UDim2.new(0,10,0,55)
+toggle.Text = "HIDE"
+toggle.BackgroundColor3 = Color3.fromRGB(40,40,40)
+toggle.TextColor3 = Color3.fromRGB(255,255,255)
+toggle.TextScaled = true
 
 local show = true
 toggle.MouseButton1Click:Connect(function()
-    show = not show
-    fpsLabel.Visible = show
-    pingLabel.Visible = show
-    toggle.Text = show and "Hide Panel" or "Show Panel"
+	show = not show
+	fpsLabel.Visible = show
+	pingLabel.Visible = show
+	toggle.Text = show and "HIDE" or "SHOW"
 end)
 
 local frames = 0
 local last = tick()
 
 RunService.RenderStepped:Connect(function()
-    frames += 1
-    if tick()-last >= 1 then
-        fpsLabel.Text = "FPS : "..frames
-        pingLabel.Text = "Ping : "..math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue()).." ms"
-        frames = 0
-        last = tick()
-    end
+	frames += 1
+	if tick() - last >= 1 then
+		fpsLabel.Text = "FPS: "..frames
+		pingLabel.Text = "Ping: "..math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue()).." ms"
+		frames = 0
+		last = tick()
+	end
 end)
