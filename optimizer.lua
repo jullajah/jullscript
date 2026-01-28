@@ -38,35 +38,35 @@ for _,v in ipairs(workspace:GetDescendants()) do
 end
 workspace.DescendantAdded:Connect(optimize)
 
--- MINI UI FPS & PING
+-- MINI UI FPS & PING (COLOR + DRAG TOGGLE)
 
-local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Stats = game:GetService("Stats")
 
 local gui = Instance.new("ScreenGui")
 gui.Parent = game.CoreGui
 
+-- FPS TEXT
 local fpsLabel = Instance.new("TextLabel")
 fpsLabel.Parent = gui
 fpsLabel.Size = UDim2.new(0,90,0,20)
 fpsLabel.Position = UDim2.new(0,10,0,10)
 fpsLabel.BackgroundTransparency = 1
-fpsLabel.Text = "FPS: 0"
 fpsLabel.TextColor3 = Color3.fromRGB(0,255,0)
 fpsLabel.TextScaled = true
 fpsLabel.Font = Enum.Font.SourceSansBold
 
+-- PING TEXT
 local pingLabel = Instance.new("TextLabel")
 pingLabel.Parent = gui
 pingLabel.Size = UDim2.new(0,110,0,20)
 pingLabel.Position = UDim2.new(0,10,0,30)
 pingLabel.BackgroundTransparency = 1
-pingLabel.Text = "Ping: 0 ms"
 pingLabel.TextColor3 = Color3.fromRGB(0,200,255)
 pingLabel.TextScaled = true
 pingLabel.Font = Enum.Font.SourceSansBold
 
+-- TOGGLE BUTTON (DRAGGABLE)
 local toggle = Instance.new("TextButton")
 toggle.Parent = gui
 toggle.Size = UDim2.new(0,70,0,22)
@@ -75,7 +75,10 @@ toggle.Text = "HIDE"
 toggle.BackgroundColor3 = Color3.fromRGB(40,40,40)
 toggle.TextColor3 = Color3.fromRGB(255,255,255)
 toggle.TextScaled = true
+toggle.Active = true
+toggle.Draggable = true
 
+-- TOGGLE SYSTEM
 local show = true
 toggle.MouseButton1Click:Connect(function()
 	show = not show
@@ -84,6 +87,7 @@ toggle.MouseButton1Click:Connect(function()
 	toggle.Text = show and "HIDE" or "SHOW"
 end)
 
+-- FPS & PING COUNTER
 local frames = 0
 local last = tick()
 
@@ -92,7 +96,18 @@ RunService.RenderStepped:Connect(function()
 	if tick() - last >= 1 then
 		fpsLabel.Text = "FPS: "..frames
 		pingLabel.Text = "Ping: "..math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue()).." ms"
+
+		-- FPS COLOR
+		if frames >= 60 then
+			fpsLabel.TextColor3 = Color3.fromRGB(0,255,0)
+		elseif frames >= 40 then
+			fpsLabel.TextColor3 = Color3.fromRGB(255,255,0)
+		else
+			fpsLabel.TextColor3 = Color3.fromRGB(255,0,0)
+		end
+
 		frames = 0
 		last = tick()
 	end
 end)
+
