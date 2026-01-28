@@ -38,7 +38,8 @@ for _,v in ipairs(workspace:GetDescendants()) do
 end
 workspace.DescendantAdded:Connect(optimize)
 
--- MINI UI FPS & PING (COLOR + DRAG TOGGLE)
+
+-- MINI UI FPS & PING FINAL (COLOR + DRAG TOGGLE)
 
 local RunService = game:GetService("RunService")
 local Stats = game:GetService("Stats")
@@ -87,23 +88,32 @@ toggle.MouseButton1Click:Connect(function()
 	toggle.Text = show and "HIDE" or "SHOW"
 end)
 
--- FPS & PING COUNTER
+-- FPS & PING COUNTER + DYNAMIC COLOR
 local frames = 0
 local last = tick()
 
 RunService.RenderStepped:Connect(function()
 	frames += 1
 	if tick() - last >= 1 then
+		-- FPS
 		fpsLabel.Text = "FPS: "..frames
-		pingLabel.Text = "Ping: "..math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue()).." ms"
-
-		-- FPS COLOR
 		if frames >= 60 then
 			fpsLabel.TextColor3 = Color3.fromRGB(0,255,0)
 		elseif frames >= 40 then
 			fpsLabel.TextColor3 = Color3.fromRGB(255,255,0)
 		else
 			fpsLabel.TextColor3 = Color3.fromRGB(255,0,0)
+		end
+
+		-- PING
+		local ping = math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue())
+		pingLabel.Text = "Ping: "..ping.." ms"
+		if ping <= 60 then
+			pingLabel.TextColor3 = Color3.fromRGB(0,255,0)
+		elseif ping <= 120 then
+			pingLabel.TextColor3 = Color3.fromRGB(255,255,0)
+		else
+			pingLabel.TextColor3 = Color3.fromRGB(255,0,0)
 		end
 
 		frames = 0
